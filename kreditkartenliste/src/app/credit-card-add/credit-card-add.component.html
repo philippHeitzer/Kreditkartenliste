@@ -1,0 +1,60 @@
+
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            Neue Kreditkarte hinzufügen
+        </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="px-5 pb-5">
+            <form class="pt-3" [formGroup]="creditCardForm" (ngSubmit)="submit()">
+                <div class="row">
+                    <div class="col-md-6 py-1">
+                        <mat-form-field class="w-100">
+                            <mat-label>Name des Karteninhabers / der Karteninhaberin</mat-label>
+                            <input matInput formControlName="owner" [errorStateMatcher]="matcher" />
+                            <mat-error *ngIf=" ownerFormControl.hasError( 'required') ">
+                                Name ist Pflicht!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-md-6 py-1">
+                        <mat-form-field class="w-100">
+                            <mat-label>Kreditkarennummer (16-stellig)</mat-label>
+                            <input matInput formControlName="cardNumber" [errorStateMatcher]="matcher" />
+                            <mat-error *ngIf=" cardNumberFormControl.hasError( 'required') ">
+                                Kreditkarennummer ist Pflicht!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+    
+
+                    <div class="col-md-6 py-1">
+                        <mat-form-field class="w-100">
+                            <mat-label>CVV (3-stellig)</mat-label>
+                            <input matInput formControlName="cvv" [errorStateMatcher]="matcher" />
+                            <mat-error *ngIf=" cvvFormControl.hasError( 'required') ">
+                                CVV ist Pflicht!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6 py-1">
+                        <mat-form-field class="w-100">
+                            <mat-label>Gültigkeitsdatum</mat-label>
+                            <input matInput formControlName="expiration" [errorStateMatcher]="matcher" />
+                            <mat-error *ngIf=" expirationFormControl.hasError( 'required') ">
+                               Gültigkeitsdatum ist Pflicht!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+
+                    <mat-card-actions>
+                        <button type="submit" id="submitBtn " mat-stroked-button [disabled]="creditCardForm.invalid ">Speichern</button>
+                    </mat-card-actions>
+                </div>
+            </form>
+        </div>
+    </mat-card-content>
+</mat-card>

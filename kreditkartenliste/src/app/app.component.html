@@ -1,5 +1,13 @@
 <div>
   <main>
+    <div class="inner">
+        <button type="button" (click)='animateButton()' class="btn btn-primary p-2 m-2">Neue Kreditkarte hinzufügen</button>
+        <div [@buttonanimation]='state'>
+          <app-credit-card-add ></app-credit-card-add>
+        </div>
+        
+    </div>
+   
     <app-credit-card-list></app-credit-card-list>
   </main>
 </div>

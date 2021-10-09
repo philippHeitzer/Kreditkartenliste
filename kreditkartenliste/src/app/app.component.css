@@ -1,0 +1,10 @@
+.inner{
+    width: 60vw;
+    margin-left: 20%;
+}
+
+.inner div{
+    height: 0px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.055);
+} 

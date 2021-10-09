@@ -12,6 +12,7 @@ export class CreditCardListComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.creditCardRepository.getData();
 
   }
 
