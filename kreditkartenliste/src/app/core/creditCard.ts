@@ -4,7 +4,6 @@ export interface CreditCard {
     owner : string;
     number : string;
      cvv : string;
-     expiration : Date;
-
+     expiration : string;
   
 }

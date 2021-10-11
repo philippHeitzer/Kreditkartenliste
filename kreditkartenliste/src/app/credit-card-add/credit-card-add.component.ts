@@ -26,15 +26,17 @@ export class CreditCardAddComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
   error = false;
 
-  ownerFormControl = new FormControl('', [Validators.required,Validators.pattern('^[a-z]+(?:\s[a-z]+)+$')])
+  ownerFirstnameFormControl = new FormControl('', [Validators.required])
+  ownerLastnameFormControl = new FormControl('', [Validators.required])
   cardNumberFormControl = new FormControl('', [Validators.required,Validators.pattern('[0-9]{16}')])
   cvvFormControl = new FormControl('',[Validators.required,Validators.pattern('[0-9]{3}')])
   //inspired by https://regex101.com/library/AFarfB
-  expirationFormControl = new FormControl('',[Validators.required,Validators.pattern('^(0[1-9]|1[0-2])\_?([0-2]{1}[0-9]{3})$')])
+  expirationFormControl = new FormControl('',[Validators.required,Validators.pattern('^(0[1-9]|1[0-2])\/?([0-9]{2})$')])
 
   constructor(private fb: FormBuilder,private creditCardRepository : CreditcardRepositoryService,private loginService : LoginService,private router: Router) {
     this.creditCardForm = fb.group({
-      owner : this.ownerFormControl,
+      ownerFirst : this.ownerFirstnameFormControl,
+      ownerLast : this.ownerLastnameFormControl,
       cardNumber : this.cardNumberFormControl,
       cvv : this.cvvFormControl,
       expiration : this.expirationFormControl
@@ -51,13 +53,15 @@ export class CreditCardAddComponent implements OnInit {
 
     const value = this.creditCardForm.value;
 
+    
+
     const creditCard : CreditCard ={
 
       id: 0,
-      owner: value.owner,
+      owner: (value.ownerFirst+" "+value.ownerLast),
       number: value.cardNumber,
       cvv: value.cvv,
-      expiration: value.expiration
+      expiration: this.handleExpirationFormat(value.expiration)
     }
 
     let accessToken=await this.loginService.getAccessToken();
@@ -84,10 +88,21 @@ export class CreditCardAddComponent implements OnInit {
   
   }
 
-
-  get owner()
+  public handleExpirationFormat(dateString) : string
   {
-    return this.creditCardForm.get('owner');
+    let splittedString= dateString.split("/",2);
+
+    return splittedString[0]+"_"+"20"+splittedString[1];
+  }
+
+  get ownerFirst()
+  {
+    return this.creditCardForm.get('ownerFirst');
+  }
+
+  get ownerLast()
+  {
+    return this.creditCardForm.get('ownerFirst');
   }
 
   get cardNumber()

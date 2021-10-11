@@ -22,4 +22,9 @@ describe('CreditCardAddComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should format date String right',() => {
+
+    expect(component.handleExpirationFormat("01/22")).toEqual("01_2022")
+  });
 });

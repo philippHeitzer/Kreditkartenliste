@@ -11,9 +11,19 @@
                 <div class="row">
                     <div class="col-md-6 py-1">
                         <mat-form-field class="w-100">
-                            <mat-label>Vorname und Nachname des Karteninhabers / der Karteninhaberin</mat-label>
-                            <input matInput formControlName="owner" [errorStateMatcher]="matcher" />
-                            <mat-error *ngIf=" ownerFormControl.hasError( 'required') ">
+                            <mat-label>Vorname  des Karteninhabers / der Karteninhaberin</mat-label>
+                            <input matInput formControlName="ownerFirst" [errorStateMatcher]="matcher" />
+                            <mat-error *ngIf="ownerFirstnameFormControl.hasError( 'required') ">
+                                Name ist Pflicht!
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="col-md-6 py-1">
+                        <mat-form-field class="w-100">
+                            <mat-label>Nachname des Karteninhabers / der Karteninhaberin</mat-label>
+                            <input matInput formControlName="ownerLast" [errorStateMatcher]="matcher" />
+                            <mat-error *ngIf=" ownerLastnameFormControl.hasError( 'required') ">
                                 Name ist Pflicht!
                             </mat-error>
                         </mat-form-field>
@@ -41,7 +51,7 @@
 
                     <div class="col-md-6 py-1">
                         <mat-form-field class="w-100">
-                            <mat-label>Gültigkeitsdatum</mat-label>
+                            <mat-label>Gültigkeitsdatum MM/JJ</mat-label>
                             <input matInput formControlName="expiration" [errorStateMatcher]="matcher" />
                             <mat-error *ngIf=" expirationFormControl.hasError( 'required') ">
                                Gültigkeitsdatum ist Pflicht!

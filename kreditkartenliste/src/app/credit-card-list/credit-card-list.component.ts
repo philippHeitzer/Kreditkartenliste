@@ -37,14 +37,18 @@ export class CreditCardListComponent implements OnInit{
  
   public async getData()
   {
+    //fetch accessToken
       this.accessToken=await this.loginService.getAccessToken();
 
+      //check if no error 
       if(this.accessToken!= Errors.AuthenticationError)
       {
         this.error=false;
         this.creditCardRepository.accessToken= this.accessToken;
+        //get CreditCard List with accessToken
         this.creditCards= this.creditCardRepository.getCreditCards(this.accessToken);   
 
+          //Subscribe Observable Data
           this.creditCards.subscribe( 
           creditCards => {
           this.dataSource.data= creditCards;

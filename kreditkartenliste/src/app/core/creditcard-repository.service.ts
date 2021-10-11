@@ -21,6 +21,7 @@ export class CreditcardRepositoryService implements OnChanges {
     return this.fetchDataError;
   }
 
+  //Intent: if status of fetchDataError changes, call this method -- doesn't work
   ngOnChanges(changes : SimpleChanges)
   {
       console.log(changes.fetchDataError.currentValue);
@@ -33,6 +34,7 @@ export class CreditcardRepositoryService implements OnChanges {
 
   public accessToken;
 
+  //send new CreditCard via POST-Request
     public add(newCreditCard : CreditCard)  
     {
       let retryCount=2;
@@ -46,14 +48,16 @@ export class CreditcardRepositoryService implements OnChanges {
             concatMap((error, count) => {
               if(count < retryCount && error.status == 401)
               {   
+                //if StatusCode 401-unauthorized returns, throw Error
                 return throwError(error);
               }
               else if (count < retryCount) {
                 return of(error);
               }
-             
+              //if all 3 tries failed, throw error
               return throwError(error);
             }),
+            //wait some time to repeat request tries
             delay(retryWaitMilliSeconds)
           )
         )     
