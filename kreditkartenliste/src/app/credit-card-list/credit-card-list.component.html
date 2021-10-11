@@ -1,24 +1,27 @@
 <h2 class="text-center pt-5">Kreditkarten</h2>
 <div class="table-responsive-md  table-hover pt-5 pb-3 px-5">
-    <table class="table table-striped container-fluid">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Kartennummer</th>
-                <th scope="col">CVV</th>
-                <th scope="col">Gültigkeitsdatum</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let creditCard of creditCards | async">
-                <th scope="row">{{creditCard.id}} </th>
-                <td>{{creditCard.owner}}</td>
-                <td>{{creditCard.number}}</td>
-                <td>{{creditCard.cvv}}</td>
-                <td>{{creditCard.expiration}}</td>
-            </tr>
-        </tbody>
+    <table class="table table-striped container-fluid" mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name </th>
+            <td mat-cell *matCellDef="let creditCard"> {{creditCard.owner}} </td>
+          </ng-container>
+          <ng-container matColumnDef="number">
+            <th mat-header-cell *matHeaderCellDef> Number </th>
+            <td mat-cell *matCellDef="let creditCard"> {{creditCard.number}} </td>
+          </ng-container>
+          <ng-container matColumnDef="cvv">
+            <th mat-header-cell *matHeaderCellDef> CVV </th>
+            <td mat-cell *matCellDef="let creditCard"> {{creditCard.cvv}} </td>
+          </ng-container>
+          <ng-container matColumnDef="expiration">
+            <th mat-header-cell *matHeaderCellDef> Gültigkeitsdatum </th>
+            <td mat-cell *matCellDef="let creditCard"> {{creditCard.expiration}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
+    <mat-paginator [length]="dataSource" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
 </div>

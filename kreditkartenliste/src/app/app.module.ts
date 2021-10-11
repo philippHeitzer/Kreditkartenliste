@@ -17,6 +17,8 @@ import { CreditcardRepositoryService } from './core/creditcard-repository.servic
 import { CreditCardAddComponent } from './credit-card-add/credit-card-add.component';
 import {ErrorStateMatcher,ShowOnDirtyErrorStateMatcher} from '@angular/material/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatTableModule} from '@angular/material/table';
 
 
 @NgModule({
@@ -39,6 +41,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ReactiveFormsModule,
     MatFormFieldModule,
     BrowserAnimationsModule,
+    MatPaginatorModule,
+    MatTableModule
   ],
   providers: [CreditcardRepositoryService,{provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}],
   bootstrap: [AppComponent]

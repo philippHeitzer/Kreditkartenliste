@@ -18,16 +18,17 @@ export class LoginService {
 
   public accessToken;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+}
 
    public async getAccessToken()
    {
-    let response1= await this.authenticateWrapper();
-    if(response1==Errors.AuthenticationError)
+    let response= await this.authenticateWrapper();
+    if(response==Errors.AuthenticationError)
     {
       return Errors.AuthenticationError;
     }
-    return response1;
+    return response;
    }
 
 
