@@ -18,9 +18,7 @@ export class LoginService {
 
   public accessToken;
 
-  constructor(private http: HttpClient) {
-    
-   }
+  constructor(private http: HttpClient) {}
 
    public async getAccessToken()
    {
@@ -29,7 +27,6 @@ export class LoginService {
     {
       return Errors.AuthenticationError;
     }
-    console.log(response1);
     return response1;
    }
 

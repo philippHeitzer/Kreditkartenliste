@@ -35,7 +35,6 @@ export class CreditCardListComponent implements OnInit {
   public async getData()
   {
     this.accessToken=await this.loginService.getAccessToken();
-    console.log(this.accessToken);
     this.creditCardRepository.accessToken= this.accessToken;
     this.creditCards= this.creditCardRepository.creditCards$;
   }
