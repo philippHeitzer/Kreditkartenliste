@@ -4,7 +4,6 @@ import { CreditcardRepositoryService } from '../core/creditcard-repository.servi
 import { CreditCard } from '../core/creditCard';
 import { LoginService } from '../core/login.service';
 import { MatPaginator } from '@angular/material/paginator';
-import {MatTableModule} from '@angular/material/table';
 import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
@@ -17,6 +16,7 @@ export class CreditCardListComponent implements OnInit {
   displayedColumns: string[]= ['name','number','cvv','expiration'];
   dataSource = new MatTableDataSource<CreditCard>();
   creditCards: Observable<CreditCard[]>
+  error: Boolean = false;
 
   accessToken;
 
@@ -35,12 +35,21 @@ export class CreditCardListComponent implements OnInit {
   public async getData()
   {
     this.accessToken=await this.loginService.getAccessToken();
-    this.creditCardRepository.accessToken= this.accessToken;
-    this.creditCards= this.creditCardRepository.creditCards$;
-   this.creditCards.subscribe( creditCards => {
-      this.dataSource.data= creditCards;
-      this.dataSource.paginator= this.paginator;
-   });
+
+    if(this.accessToken!=0)
+    {
+      this.error=false;
+      this.creditCardRepository.accessToken= this.accessToken;
+      this.creditCards= this.creditCardRepository.creditCards$;
+      this.creditCards.subscribe( creditCards => {
+        this.dataSource.data= creditCards;
+        this.dataSource.paginator= this.paginator;
+     });
+     }
+     else{
+      this.error= true;
+    }
+   
   }
 
 }

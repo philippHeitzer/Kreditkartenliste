@@ -8,7 +8,7 @@ import {trigger,state,style,transition, animate,keyframes} from '@angular/animat
   animations: [
   trigger('buttonanimation',[
     state('small',style({height: '0px'})),
-    state('large',style({height: '300px'})),
+    state('large',style({height: '400px'})),
 
     transition('small <=> large', animate('400ms ease-in'))
   ])

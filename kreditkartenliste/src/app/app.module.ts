@@ -19,16 +19,24 @@ import {ErrorStateMatcher,ShowOnDirtyErrorStateMatcher} from '@angular/material/
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableModule} from '@angular/material/table';
+import { RouterModule } from '@angular/router';
+import { MenuComponent } from './menu/menu.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     CreditCardListComponent,
-    CreditCardAddComponent
+    CreditCardAddComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
+    RouterModule.forRoot([
+      { path: '', pathMatch: 'full', redirectTo: 'list' },
+      { path: 'list', component: CreditCardListComponent },
+      { path: 'add', component: CreditCardAddComponent }
+    ]),
     HttpClientModule,
     CoreModule.forRoot(),
     FormsModule,
@@ -42,7 +50,7 @@ import {MatTableModule} from '@angular/material/table';
     MatFormFieldModule,
     BrowserAnimationsModule,
     MatPaginatorModule,
-    MatTableModule
+    MatTableModule,
   ],
   providers: [CreditcardRepositoryService,{provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}],
   bootstrap: [AppComponent]
