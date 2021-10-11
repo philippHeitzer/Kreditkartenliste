@@ -1,17 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { EMPTY, Observable ,of} from 'rxjs';
+import { Component,  OnInit, ViewChild } from '@angular/core';
+import { Observable } from 'rxjs';
 import { CreditcardRepositoryService } from '../core/creditcard-repository.service';
 import { CreditCard } from '../core/creditCard';
-import { LoginService } from '../core/login.service';
+import { LoginService } from '../core/login/login.service';
 import { MatPaginator } from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
+import { Errors} from '../core/Errors';
+
 
 @Component({
   selector: 'app-credit-card-list',
   templateUrl: './credit-card-list.component.html',
   styleUrls: ['./credit-card-list.component.css']
 })
-export class CreditCardListComponent implements OnInit {
+export class CreditCardListComponent implements OnInit{
 
   displayedColumns: string[]= ['name','number','cvv','expiration'];
   dataSource = new MatTableDataSource<CreditCard>();
@@ -22,7 +24,7 @@ export class CreditCardListComponent implements OnInit {
 
   @ViewChild(MatPaginator,{static: true}) paginator : MatPaginator;
 
-  
+
   constructor(private creditCardRepository : CreditcardRepositoryService, private loginService : LoginService)
   {
     this.getData();
@@ -32,24 +34,30 @@ export class CreditCardListComponent implements OnInit {
 
   }
 
+ 
   public async getData()
   {
-    this.accessToken=await this.loginService.getAccessToken();
+      this.accessToken=await this.loginService.getAccessToken();
 
-    if(this.accessToken!=0)
-    {
-      this.error=false;
-      this.creditCardRepository.accessToken= this.accessToken;
-      this.creditCards= this.creditCardRepository.creditCards$;
-      this.creditCards.subscribe( creditCards => {
-        this.dataSource.data= creditCards;
-        this.dataSource.paginator= this.paginator;
-     });
-     }
-     else{
-      this.error= true;
-    }
+      if(this.accessToken!= Errors.AuthenticationError)
+      {
+        this.error=false;
+        this.creditCardRepository.accessToken= this.accessToken;
+        this.creditCards= this.creditCardRepository.getCreditCards(this.accessToken);   
+
+          this.creditCards.subscribe( 
+          creditCards => {
+          this.dataSource.data= creditCards;
+          this.dataSource.paginator= this.paginator;
+        });
+      }
+      else{
+        this.error= true;
+      }
    
+    
+
   }
+
 
 }

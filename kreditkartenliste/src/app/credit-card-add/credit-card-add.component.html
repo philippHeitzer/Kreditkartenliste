@@ -11,7 +11,7 @@
                 <div class="row">
                     <div class="col-md-6 py-1">
                         <mat-form-field class="w-100">
-                            <mat-label>Name des Karteninhabers / der Karteninhaberin</mat-label>
+                            <mat-label>Vorname und Nachname des Karteninhabers / der Karteninhaberin</mat-label>
                             <input matInput formControlName="owner" [errorStateMatcher]="matcher" />
                             <mat-error *ngIf=" ownerFormControl.hasError( 'required') ">
                                 Name ist Pflicht!
@@ -20,7 +20,7 @@
                     </div>
                     <div class="col-md-6 py-1">
                         <mat-form-field class="w-100">
-                            <mat-label>Kreditkarennummer (16-stellig)</mat-label>
+                            <mat-label>Kreditkartennummer (16-stellig)</mat-label>
                             <input matInput formControlName="cardNumber" [errorStateMatcher]="matcher" />
                             <mat-error *ngIf=" cardNumberFormControl.hasError( 'required') ">
                                 Kreditkarennummer ist Pflicht!
@@ -49,6 +49,7 @@
                         </mat-form-field>
                     </div>
 
+                    <div mat-error *ngIf="error">Ein Fehler ist aufgetreten!</div>
 
                     <mat-card-actions>
                         <button type="submit" id="submitBtn " mat-stroked-button [disabled]="creditCardForm.invalid ">Speichern</button>

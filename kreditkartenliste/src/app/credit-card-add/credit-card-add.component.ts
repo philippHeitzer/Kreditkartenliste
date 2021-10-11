@@ -3,7 +3,7 @@ import { FormBuilder,FormGroup, Validators ,FormControl,FormGroupDirective, NgFo
 import {ErrorStateMatcher} from '@angular/material/core';
 import { CreditcardRepositoryService } from '../core/creditcard-repository.service';
 import { CreditCard } from '../core/creditCard';
-import { LoginService } from '../core/login.service';
+import { LoginService } from '../core/login/login.service';
 import { Router } from '@angular/router';
 
 
@@ -24,9 +24,9 @@ export class CreditCardAddComponent implements OnInit {
 
   creditCardForm: FormGroup;
   matcher = new MyErrorStateMatcher();
+  error = false;
 
-
-  ownerFormControl = new FormControl('', [Validators.required])
+  ownerFormControl = new FormControl('', [Validators.required,Validators.pattern('^[a-z]+(?:\s[a-z]+)+$')])
   cardNumberFormControl = new FormControl('', [Validators.required,Validators.pattern('[0-9]{16}')])
   cvvFormControl = new FormControl('',[Validators.required,Validators.pattern('[0-9]{3}')])
   //inspired by https://regex101.com/library/AFarfB
@@ -42,7 +42,7 @@ export class CreditCardAddComponent implements OnInit {
    }
 
   ngOnInit(): void {
-
+    this.error= false;
   }
 
   public async submit() {
@@ -69,11 +69,19 @@ export class CreditCardAddComponent implements OnInit {
     if(oldAccessToken!=this.creditCardRepository.accessToken)
     {
       this.creditCardRepository.add(creditCard).subscribe();
-
     }
-    this.creditCardForm.reset();
-    this.router.navigate(['list']);
- 
+
+    if(this.creditCardRepository.fetchDataError == true)
+    {
+      this.error=true;
+    }
+    else
+    {
+      this.creditCardForm.reset();
+      this.router.navigate(['list']);
+    }
+   
+  
   }
 
 

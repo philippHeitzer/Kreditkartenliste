@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders,HttpErrorResponse} from '@angular/common/http';
-
-
-export enum Errors {
-  AuthenticationError,
-  FetchDataError
-}
-
+import { Errors } from '../Errors';
 
 @Injectable({
   providedIn: 'root'
@@ -51,7 +45,6 @@ export class LoginService {
 
   public async authenticateWrapper()
   {
-    
     let retryCount=3;
 
     for(let i=0; i<retryCount;i++)

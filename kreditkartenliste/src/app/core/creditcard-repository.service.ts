@@ -1,77 +1,93 @@
-import { Injectable } from '@angular/core';
+import { Injectable ,Input, OnChanges,SimpleChanges} from '@angular/core';
 import { CreditCard } from './creditCard';
 import { HttpClient, HttpHeaders} from '@angular/common/http';
-import {tap, concatMap, delay, repeatWhen, retryWhen, switchMap } from 'rxjs/operators';
-import {Subject, Observable, EMPTY,of, throwError, EmptyError} from 'rxjs';
-import { LoginService } from './login.service';
-import { ThrowStmt } from '@angular/compiler';
+import { concatMap, delay, retryWhen} from 'rxjs/operators';
+import {of, throwError} from 'rxjs';
+import { LoginService } from './login/login.service';
+import { Errors } from './Errors';
 
-
-
-export enum Errors {
-  AuthenticationError,
-  FetchDataError
-}
 
 @Injectable({
   providedIn: 'root'
 })
-export class CreditcardRepositoryService {
+export class CreditcardRepositoryService implements OnChanges {
 
-  private baseUrl : string='https://credit-card-list.application.riecken.io'
+  private baseUrl : string='https://credit-card-list.application.riecken.io';
 
-  public creditCards : CreditCard[]=[];
+   @Input() fetchDataError : boolean= false;
 
-  private creditCardsSubject= new Subject<any>();
+  public getFetchDataError()
+  {
+    return this.fetchDataError;
+  }
 
-  private fetchDataError= false;
+  ngOnChanges(changes : SimpleChanges)
+  {
+      console.log(changes.fetchDataError.currentValue);
+  }
 
-  constructor(private http: HttpClient,private loginService : LoginService) { }
+
+  constructor(private http: HttpClient,private loginService : LoginService) {
+    
+   }
 
   public accessToken;
 
-  
     public add(newCreditCard : CreditCard)  
     {
+      let retryCount=2;
+      let retryWaitMilliSeconds=500;
       let ownHeaders = new HttpHeaders({'Authorization': 'Bearer '+ this.accessToken, 'Content-Type': 'application/json'});
        
       return this.http.post(this.baseUrl+'/credit-cards',
       JSON.stringify({"owner": newCreditCard.owner, "number": Number(newCreditCard.number), "cvv": Number(newCreditCard.cvv),"expiration": newCreditCard.expiration}),
-      {headers: ownHeaders}).pipe(tap(item => this.creditCardsSubject.next(item)))
+      {headers: ownHeaders}).pipe(retryWhen(error => 
+        error.pipe(
+            concatMap((error, count) => {
+              if(count < retryCount && error.status == 401)
+              {   
+                return throwError(error);
+              }
+              else if (count < retryCount) {
+                return of(error);
+              }
+             
+              return throwError(error);
+            }),
+            delay(retryWaitMilliSeconds)
+          )
+        )     
+      )
     }
 
-    get creditCards$()
+    public getCreditCards(accessToken)
     {
       let retryCount=2;
-      let retryWaitMilliSeconds=1000;
+      let retryWaitMilliSeconds=500;
 
       
-      let ownHeaders = new HttpHeaders({'Authorization': 'Bearer '+ this.accessToken});
-      console.log(ownHeaders);
+      let ownHeaders = new HttpHeaders({'Authorization': 'Bearer '+ accessToken});
+      
   
         return this.http.get<CreditCard[]>(this.baseUrl+'/credit-cards',{headers: ownHeaders})
         .pipe(
-          ( repeatWhen(_ => this.creditCardsSubject.asObservable()),
-            retryWhen(error => 
-            error.pipe(
-              concatMap((error, count) => {
-                if(count < retryCount && error.status == 401)
-                {   
-                    
-                }
-                else if (count < retryCount) {
-                  return of(error);
-                }
-                return throwError(error);
-              }),
-              delay(retryWaitMilliSeconds)
-            )
-          )     
+          ( retryWhen(error => 
+              error.pipe(
+                concatMap((error, count) => {
+                  if(count < retryCount && error.status == 401)
+                  {   
+                      this.fetchDataError=true;
+                      return throwError(error);
+                  }
+                  else if (count < retryCount) {
+                    return of(error);
+                  }
+                  return throwError(error);
+                }),
+                delay(retryWaitMilliSeconds)
+              )
+            )     
           )
-
         )
     }
-
-  
-
 }
