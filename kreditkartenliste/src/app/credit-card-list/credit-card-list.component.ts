@@ -14,30 +14,30 @@ export class CreditCardListComponent implements OnInit {
 
   creditCards: Observable<CreditCard[]>
 
-  accessToken : Observable<string>;
+  accessToken;
 
    myObserver = {
-    next: (x: string) => console.log('Observer got a next value: ' + x),
+    next: (x: CreditCard[]) => console.log('Observer got a next value: ' + x),
     error: (err: Error) => console.error('Observer got an error: ' + err),
     complete: () => console.log('Observer got a complete notification'),
   }
   
   constructor(private creditCardRepository : CreditcardRepositoryService, private loginService : LoginService)
   {
-    
+    this.getData();
   }
 
   ngOnInit(): void {
 
-    this.getToken();
+    
   }
 
-  public async getToken()
+  public async getData()
   {
-    let data = await this.loginService.getAccessToken();
-    this.accessToken=of(data);
+    this.accessToken=await this.loginService.getAccessToken();
     console.log(this.accessToken);
-
+    this.creditCardRepository.accessToken= this.accessToken;
+    this.creditCards= this.creditCardRepository.creditCards$;
   }
 
 }

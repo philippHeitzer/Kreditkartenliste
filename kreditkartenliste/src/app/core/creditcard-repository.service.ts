@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CreditCard } from './creditCard';
 import { HttpClient, HttpHeaders,HttpErrorResponse} from '@angular/common/http';
 import { catchError, retry, retryWhen, concatMap,delay,tap, repeatWhen} from 'rxjs/operators';
-import { Observable, throwError, of, BehaviorSubject} from 'rxjs';
+import {Subject, Observable, throwError, of, BehaviorSubject} from 'rxjs';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 
@@ -20,11 +20,7 @@ export class CreditcardRepositoryService {
 
   public creditCards : CreditCard[]=[];
 
-  private creditCardsSubject= new BehaviorSubject<CreditCard[]>(this.creditCards);
-
-  public creditCards$ = this.creditCardsSubject.asObservable();
-
-  private _accessToken;
+  private creditCardsSubject= new Subject<any>();
 
   private _data;
 
@@ -32,35 +28,21 @@ export class CreditcardRepositoryService {
 
   constructor(private http: HttpClient) { }
 
-  public get accessToken()
-  {
-    return this.accessToken;
-  }
+  public accessToken;
+
 
   public get data()
   {
     return this._data;
   }
-
-
-  public async getData()
-  {
-
   
-    this.creditCards= await this.fetchCreditCardsWrapper();
-    this.creditCardsSubject.next(this.creditCards);
-
-    return true;
-  }
-
-  
-public async fetchCreditCardsWrapper()
+/*public async fetchCreditCardsWrapper(accessToken)
 {
   let retryCount=3;
 
   for(let j=0; j<retryCount;j++)
   {
-    this._data = await this.fetchCreditCardsTest(this._accessToken);
+    this._data = await this.fetchCreditCardsTest(accessToken);
     if(this._data !=  Errors.FetchDataError && this._data != undefined)
     {
       return this._data;
@@ -68,13 +50,11 @@ public async fetchCreditCardsWrapper()
   }
     return Errors.FetchDataError;
 
-}
+}*/
 
-
-
-    public fetchCreditCardsTest(accessToken)
+    get creditCards$()
     {
-      const ownHeaders2 = new HttpHeaders({'Authorization': 'Bearer '+ accessToken});
+      const ownHeaders2 = new HttpHeaders({'Authorization': 'Bearer '+ this.accessToken});
   
       return this.http.get<CreditCard[]>('https://credit-card-list.application.riecken.io/credit-cards',{headers: ownHeaders2}).pipe((repeatWhen(_ => this.creditCardsSubject.asObservable())))
 

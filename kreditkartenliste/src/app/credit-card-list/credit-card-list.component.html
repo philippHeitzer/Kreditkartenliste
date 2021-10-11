@@ -11,13 +11,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th></th>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+            <tr *ngFor="let creditCard of creditCards | async">
+                <th scope="row">{{creditCard.id}} </th>
+                <td>{{creditCard.owner}}</td>
+                <td>{{creditCard.number}}</td>
+                <td>{{creditCard.cvv}}</td>
+                <td>{{creditCard.expiration}}</td>
             </tr>
         </tbody>
     </table>

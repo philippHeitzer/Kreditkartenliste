@@ -1,46 +1,23 @@
 export class CreditCard {
     
-    public _id : number;
-    private _owner : string;
-    private _cardNumber : string;
-    private _cvv : string;
-    private _expiration : Date;
+    public id : number;
+    public owner : string;
+    public number : string;
+    public cvv : string;
+    public expiration : Date;
 
     constructor(id : number,
          owner : string,
-         cardNumber: string,
+         number: string,
          cvv : string,
          expiration : Date){
-             this._id = id;
-             this._owner = owner;
-             this._cardNumber = cardNumber;
-             this._cvv = cvv;
-             this._expiration = expiration;
+             this.id = id;
+             this.owner = owner;
+             this.number = number;
+             this.cvv = cvv;
+             this.expiration = expiration;
          }
 
 
-   public get id()
-   {
-        return this._id;
-   }
-
-   public get owner()
-   {
-       return this._owner;
-   }
-
-   public get cardNumber()
-   {
-       return this._cardNumber;
-   }
-
-   public get cvv()
-   {
-       return this._cvv;
-   }
-
-   public get expiration()
-   {
-       return this._expiration;
-   }
+  
 }

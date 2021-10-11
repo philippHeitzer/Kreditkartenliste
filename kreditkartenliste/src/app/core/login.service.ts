@@ -25,7 +25,6 @@ export class LoginService {
    public async getAccessToken()
    {
     let response1= await this.authenticateWrapper();
-    console.log(response1);
     if(response1==Errors.AuthenticationError)
     {
       return Errors.AuthenticationError;
@@ -52,7 +51,7 @@ export class LoginService {
     }
 
 
-    public async authenticateWrapper()
+  public async authenticateWrapper()
   {
     
     let retryCount=3;
