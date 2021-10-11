@@ -1,6 +1,6 @@
 export class CreditCard {
     
-    private _id : number;
+    public _id : number;
     private _owner : string;
     private _cardNumber : string;
     private _cvv : string;

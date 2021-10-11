@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable ,of} from 'rxjs';
 import { CreditcardRepositoryService } from '../core/creditcard-repository.service';
+import { CreditCard } from '../core/creditCard';
+import { LoginService } from '../core/login.service';
 
 @Component({
   selector: 'app-credit-card-list',
@@ -8,11 +11,32 @@ import { CreditcardRepositoryService } from '../core/creditcard-repository.servi
 })
 export class CreditCardListComponent implements OnInit {
 
-  constructor(private creditCardRepository: CreditcardRepositoryService) { }
+
+  creditCards: Observable<CreditCard[]>
+
+  accessToken : Observable<string>;
+
+   myObserver = {
+    next: (x: string) => console.log('Observer got a next value: ' + x),
+    error: (err: Error) => console.error('Observer got an error: ' + err),
+    complete: () => console.log('Observer got a complete notification'),
+  }
+  
+  constructor(private creditCardRepository : CreditcardRepositoryService, private loginService : LoginService)
+  {
+    
+  }
 
   ngOnInit(): void {
 
-    this.creditCardRepository.getData();
+    this.getToken();
+  }
+
+  public async getToken()
+  {
+    let data = await this.loginService.getAccessToken();
+    this.accessToken=of(data);
+    console.log(this.accessToken);
 
   }
 
